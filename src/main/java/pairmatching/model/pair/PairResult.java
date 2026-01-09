@@ -3,7 +3,6 @@ package pairmatching.model.pair;
 import java.util.ArrayList;
 import java.util.List;
 import pairmatching.model.crew.Course;
-import pairmatching.model.crew.Crew;
 import pairmatching.model.crew.Level;
 import pairmatching.model.crew.Mission;
 

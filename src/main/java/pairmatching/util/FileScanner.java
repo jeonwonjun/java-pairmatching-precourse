@@ -39,7 +39,6 @@ public class FileScanner {
         try {
             Scanner scanner = new Scanner(new File(filePath));
             List<String> fileBody = new ArrayList<>();
-            scanner.next();
             while (scanner.hasNext()) {
                 fileBody.add(scanner.next());
             }

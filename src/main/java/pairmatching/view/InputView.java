@@ -1,8 +1,19 @@
 package pairmatching.view;
 
 import camp.nextstep.edu.missionutils.Console;
+import java.util.function.Supplier;
 
 public class InputView {
+
+    public static <T> T readWithRetry(Supplier<T> supplier) {
+        while (true) {
+            try {
+                return supplier.get();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
     public static String readMenu() {
         System.out.println("기능을 선택하세요.");
@@ -14,6 +25,7 @@ public class InputView {
     }
 
     public static String readInfo() {
+        System.out.println();
         System.out.println("#############################################");
         System.out.println("과정: 백엔드 | 프론트엔드");
         System.out.println("미션:");

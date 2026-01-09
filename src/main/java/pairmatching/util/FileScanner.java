@@ -21,7 +21,7 @@ public class FileScanner {
     }
 
     public List<Crew> loadFrontendCrews() {
-        List<String> lines = readFile(BACKEND_PATH);
+        List<String> lines = readFile(FRONTEND_PATH);
         return lines.stream()
                 .map(this::parseToFrontendCrew)
                 .collect(Collectors.toList());

@@ -51,36 +51,37 @@ public class PairMatchingController {
     }
 
     private void makePair(PairResults pairResults) {
-        boolean ok = false;
-        int count = 0;
-        do {
-            count++;
-            String input = InputView.readInfo();
-            List<String> inputList = Arrays.asList(input.split(","));
-            Course course = Course.getCourse(inputList.get(0).trim());
-            Level level = Level.getLevel(inputList.get(1).trim());
-            Mission mission = Mission.getMission(level, inputList.get(2).trim());
-            PairResult periodResult = pairResults.findByInfo(course, level, mission);
 
-            List<String> crewNames = chooseCourse(course);
+        String input = InputView.readInfo();
+        List<String> inputList = Arrays.asList(input.split(","));
+        Course course = Course.getCourse(inputList.get(0).trim());
+        Level level = Level.getLevel(inputList.get(1).trim());
+        Mission mission = Mission.getMission(level, inputList.get(2).trim());
 
-            PairResult pairResult = shuffledCrew(crewNames, course, level, mission);
-
-            if (periodResult == null || !checkDuplicate(periodResult.getPairList(), pairResult.getPairList())) {
-                ok = true;
-                pairResults.addList(pairResult);
-                OutputView.printList(pairResult.getPairList());
-                break;
-            }
-
-            if (count == 3) {
-                throw new IllegalArgumentException(ErrorMessage.MATCHING_FAIL.getMessage());
-            }
-        } while (ok && count < 3);
+        makeMatch(pairResults, course, level, mission);
     }
 
-    private boolean checkDuplicate(List<Pair> periodResult, List<Pair> newResult) {
-        return periodResult.stream().anyMatch(newResult::contains);
+    private void makeMatch(PairResults pairResults, Course course, Level level, Mission mission) {
+        List<Pair> historyPairs = pairResults.findAllByCourseAndLevel(course, level);
+
+        List<String> crewNames = chooseCourse(course);
+        for (int i = 0; i < 3; i++) {
+            PairResult pairResult = shuffledCrew(crewNames, course, level, mission);
+
+            if (!checkDuplicate(historyPairs, pairResult.getPairList())) {
+                pairResults.addList(pairResult);
+                OutputView.printList(pairResult.getPairList());
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException(ErrorMessage.MATCHING_FAIL.getMessage());
+    }
+
+    private boolean checkDuplicate(List<Pair> history, List<Pair> newResult) {
+        return newResult.stream()
+                .anyMatch(result -> history.stream()
+                        .anyMatch(h -> h.isSamePair(result)));
     }
 
     private List<String> chooseCourse(Course course) {
@@ -102,9 +103,9 @@ public class PairMatchingController {
         for (int i = 0; i < shuffledCrew.size(); i += 2) {
             Pair pair = new Pair();
             pair.add(shuffledCrew.get(i));
-            pair.add(shuffledCrew.get(i+1));
+            pair.add(shuffledCrew.get(i + 1));
             if (i == shuffledCrew.size() - 3) {
-                pair.add(shuffledCrew.get(i+2));
+                pair.add(shuffledCrew.get(i + 2));
                 i++;
             }
             pairResult.addPairResult(pair);

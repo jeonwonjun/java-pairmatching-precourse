@@ -10,6 +10,7 @@ public enum ErrorMessage {
 
     NON_MATCHING_HISTORY("매칭 이력이 없습니다."),
     MATCHING_FAIL("매칭할 수 없습니다."),
+    INVALID_MISSION_EXISTS("없는 미션입니다."),
 
     INVALID_FILE_READ("파일을 읽는 중 오류가 발생했습니다.");
 

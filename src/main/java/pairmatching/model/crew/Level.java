@@ -1,5 +1,7 @@
 package pairmatching.model.crew;
 
+import java.util.Arrays;
+
 public enum Level {
     LEVEL1("레벨1"),
     LEVEL2("레벨2"),
@@ -17,5 +19,10 @@ public enum Level {
         return name;
     }
 
-    // 추가 기능 구현
+    public static Level getLevel(String levelName) {
+        return Arrays.stream(values())
+                .filter(l -> l.name.equals(levelName))
+                .findFirst()
+                .get();
+    }
 }

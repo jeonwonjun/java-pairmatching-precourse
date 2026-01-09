@@ -1,5 +1,7 @@
 package pairmatching.model.crew;
 
+import java.util.Arrays;
+
 public enum Course {
     BACKEND("백엔드"),
     FRONTEND("프론트엔드");
@@ -14,5 +16,10 @@ public enum Course {
         return name;
     }
 
-    // 추가 기능 구현
+    public static Course getCourse(String course) {
+        return Arrays.stream(values())
+                .filter(c -> c.name.equals(course))
+                .findFirst()
+                .get();
+    }
 }
